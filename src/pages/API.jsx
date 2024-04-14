@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 
-function API() {
+const API= () => {
     const [data, setData] = useState([{}]);
 
     useEffect(() => {
