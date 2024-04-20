@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 function NumberPlateDetection() {
   // State to store uploaded video file
@@ -22,6 +23,12 @@ function NumberPlateDetection() {
     }
   };
 
+  // Function to handle logout
+  const handleLogout = () => {
+    // Perform logout logic here
+    console.log('Logged out');
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold mt-8 mb-6">Number Plate Detection Page</h1>
@@ -33,7 +40,7 @@ function NumberPlateDetection() {
 
       {/* Upload Video Button */}
       <label htmlFor="upload" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-        Upload Video
+        Choose a New File
       </label>
       <input
         type="file"
@@ -42,11 +49,21 @@ function NumberPlateDetection() {
         className="hidden"
         onChange={handleFileUpload}
       />
+      {videoFile && (
+        <div className="mt-2">
+          <p className="text-gray-500">Selected File: {videoFile.name}</p>
+        </div>
+      )}
+
+      {/* Logout Button */}
+      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleLogout}>
+        Logout
+      </button>
 
       {/* Display uploaded video or camera stream */}
       {videoFile && (
         <div className="mt-6">
-          <video controls className="w-full">
+          <video autoPlay muted controls className="w-full">
             <source src={URL.createObjectURL(videoFile)} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
