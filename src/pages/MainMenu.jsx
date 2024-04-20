@@ -15,7 +15,7 @@ const MainMenu = () => {
             Intelligence Smart Parking System
           </h3>
 
-          <button className="w-60 font-kanit bg-teal-700 hover:bg-teal-900 text-white text-3xl py-4 px-4 mt-2 rounded-2xl font-light">
+          <button className="w-60 font-kanit bg-teal-700 hover:bg-teal-900 text-white text-3xl py-4 px-4 mt-2 rounded-2xl font-bold">
             <Link to="/login">Login Now</Link>
           </button>
         </div>
