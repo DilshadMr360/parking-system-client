@@ -5,7 +5,7 @@ import { AdvancedVideo } from '@cloudinary/react';
 
 const cloudinary = new Cloudinary({
   cloud: {
-    cloudName: 'dsnznxazm' 
+    cloudName: 'dsnznxazm'
   }
 });
 
@@ -26,7 +26,7 @@ function NumberPlateDetection() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
+      const response = await axios.post('http://localhost:5000/upload_plate', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -61,12 +61,17 @@ function NumberPlateDetection() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mt-8 mb-6">Number Plate Detection Page</h1>
+      <div className='w-full flex flex-row'>
 
-      <div className="">
+
+        {/* Number Plate Full VIEW*/}
+         
+    <div className="container  px-4 sm:px-6  lg:px-8  md:w-6/12 md:items-start">
+      <h1 className="text-3xl font-bold mt-8 mb-6  text-center">Number Plate Detection </h1>
+
+      <div className="flex flex-col space-y-4">
         {/* Upload Video Button */}
-        <div className="">
+        <div className="flex flex-col space-y-2 text-center">
           <label htmlFor="upload" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
             Choose a Video File
           </label>
@@ -78,40 +83,50 @@ function NumberPlateDetection() {
             onChange={handleFileChange}
           />
           {file && (
-             <div className="mt-2">
-             <p className="text-gray-500">Selected File: {file.name}</p>
-           </div>
+            <div>
+              <p className="text-gray-500">Selected File: {file.name}</p>
+            </div>
           )}
-        <button onClick={handleUpload} disabled={!file || processing} className="">
-                {processing ? 'Processing...' : 'Upload Video'}
-              </button>
+          <button onClick={handleUpload} disabled={!file || processing} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            {processing ? 'Processing...' : 'Upload Video'}
+          </button>
         </div>
 
         {/* Or Paste a Video Link */}
-        <div className="link-container">
-          <label htmlFor="video-link">Or paste a video link:</label>
-          <input type="text" id="video-link" value={videoLink} onChange={handleChange} placeholder="Paste Video Link" className="border border-gray-400 py-2 px-4 rounded mr-2" />
-          <button onClick={handlePasteLink} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">Play Video</button>
+        <div className="flex items-center space-x-2">
+          <label htmlFor="video-link" className="mr-2 ">Paste a video link:</label>
+          <input type="text" id="" value={videoLink} onChange={handleChange} placeholder="Paste Video Link" className="border border-gray-400 py-2 px-4 rounded w-[600px]" />
+          <button onClick={handlePasteLink} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            Play 
+          </button>
         </div>
 
         {/* Turn On Camera Button */}
-      
-        {/* <button onClick={handleWeaponDetection} className="weapon-detection-button">Weapon Detection</button> */}
-          <button onClick={handleCameraDetection} className="bg-red-500 py-2 px-4 text-white font-bold">Turn On Camera</button>
+        <button onClick={handleCameraDetection} className="bg-red-500 py-2 px-4 text-white font-bold rounded">
+          Turn On Camera
+        </button>
       </div>
+
       {processedVideoPublicId && (
-          <div className='player-wrapper'>
-            <AdvancedVideo
-              cldVid={cloudinary.video(processedVideoPublicId)}
-              width='100%'
-              height='100%'
-              controls
-              autoPlay
-              muted
-            />
-          </div>
-       )}
-      </div>
+        <div className='player-wrapper mt-8'>
+          <AdvancedVideo
+            cldVid={cloudinary.video(processedVideoPublicId)}
+            width='100%'
+            height='100%'
+            controls
+            autoPlay
+            muted
+          />
+        </div>
+      )}
+    </div>
+        
+        {/* END Number Plate Full VIEW*/}
+
+
+
+     </div>
+
   );
 }
 
