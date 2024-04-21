@@ -4,6 +4,7 @@ import API from "./pages/API";
 import MainMenu from "./pages/MainMenu";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ParkingSlotDetection from "./pages/ParkingSlotDetection";
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Route path="/" element={<MainMenu />} />
         <Route path="/api" element={<API />} />
         <Route path="/numberplate" element={<NumberPlateDetection />} />
+        <Route path="/parkingslot" element={<ParkingSlotDetection />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
