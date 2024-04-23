@@ -1,13 +1,84 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { database } from '../pages/FirebaseConfig';
 
 const Register = () => {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [register, setRegister] = useState(false);
+  const [userError, setUserError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
+  const navigate = useNavigate()
 
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // console.log(e.target.email.value)
+    const userName = e.target.userName.value;
+    const email = e.target.email.value
+    const password = e.target.password.value
+    const confirmPassword = e.target.confirmPassword.value;
+
+
+    //Username Validation 
+    if (!userName.trim()) {
+      setUserError('UserName is Required.');
+      return;
+    } else {
+      setUserError('');
+    }
+
+    // Email validation
+    if (!email.trim()) {
+      setEmailError('Email is Required.');
+      return;
+    } else {
+      setEmailError('');
+    }
+    // Email validation
+    if (!email.trim()) {
+      setEmailError('Email is Required.');
+      return;
+    } else {
+      setEmailError('');
+    }
+
+    // Password validation
+    if (!password.trim()) {
+      setPasswordError('Please fill in your password.');
+      return;
+    } else {
+      setPasswordError('');
+    }
+
+    // Confirm password validation
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError('Confirm password is required.');
+      return;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match.');
+      return;
+    } else {
+      setConfirmPasswordError('');
+    }
+
+
+    createUserWithEmailAndPassword(database, email, password).then(data => {
+      console.log(data, "authData")
+      navigate('/numberplate')
+    }).catch(err => {
+      alert(err.code)
+      setRegister(true)
+    })
+  }
+
 
   return (
     <div className="relative h-screen">
@@ -22,19 +93,22 @@ const Register = () => {
           <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl">
             Register your account
           </h1>
-          <form className="space-y-4 md:space-y-6" action="#">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-3" action="#">
             <div>
               <label className="block mb-2 text-xl text-white font-bold">
                 Your User Name
               </label>
               <input
                 type="text"
-                name="username"
-                id="username"
-                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-black"
-                placeholder="username"
+                name="userName"
+                id="userName"
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
+                placeholder="Enter Username"
                 required=""
               />
+              {userError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{userError}</p>
+              )}
             </div>
             <div>
               <label className="block mb-2 text-xl text-white font-bold">
@@ -44,10 +118,13 @@ const Register = () => {
                 type="email"
                 name="email"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-black"
-                placeholder="name@company.com"
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
+                placeholder="Enter email"
                 required=""
               />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{emailError}</p>
+              )}
             </div>
             <div className="relative">
               <label htmlFor="password" className="block mb-2 text-xl text-white font-bold">
@@ -58,35 +135,46 @@ const Register = () => {
                 name="password"
                 id="password"
                 placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-black"
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
                 required=""
               />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{passwordError}</p>
+              )}
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 top-1/2 transform -translate-y-1/2"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 top-1/2 transform -translate-y-1/2 "
                 onClick={togglePasswordVisibility}
                 aria-label="Toggle password visibility"
               >
                 {passwordShown ? <FaEyeSlash className="text-xl mt-8" /> : <FaEye className="text-xl mt-8" />}
               </button>
             </div>
-            <div className="flex items-center justify-between">
-              {/* <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    required=""
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="remember" className="text-white font-bold">
-                    Remember me
-                  </label>
-                </div>
-              </div> */}
+
+            <div className="relative">
+              <label htmlFor="password" className="block mb-2 text-xl text-white font-bold">
+                Confirm Password
+              </label>
+              <input
+                type={passwordShown ? "text" : "password"}
+                name="confirmPassword"
+                id="confirmPassword"
+                placeholder="••••••••"
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
+                required=""
+              />
+
+              {confirmPasswordError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{confirmPasswordError}</p>
+              )}
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 top-1/2 transform -translate-y-1/2 "
+                onClick={togglePasswordVisibility}
+                aria-label="Toggle password visibility"
+              >
+                {passwordShown ? <FaEyeSlash className="text-xl mt-8" /> : <FaEye className="text-xl mt-8" />}
+              </button>
             </div>
             <div className="flex justify-center">
               <button
@@ -96,11 +184,16 @@ const Register = () => {
                 Sign Up
               </button>
             </div>
+            {register && ( // Conditionally render based on register state
+              <div className="text-red-500 text-md font-bold">
+                Registration failed. Please try again.
+              </div>
+            )}
             <div className="flex gap-3">
               <p className="text-xl text-white font-bold">
                 Already have an Account?
               </p>
-              <Link to="/">
+              <Link to="/login">
                 <span className="font-bold hover:underline text-xl text-teal-700">
                   Sign In
                 </span>
