@@ -1,12 +1,51 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
+import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { database } from '../pages/FirebaseConfig';
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [login, setLogin] = useState(false);
+
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    // Email validation
+    if (!email.trim()) {
+      setEmailError('Email is Required.');
+      return;
+    } else {
+      setEmailError('');
+    }
+
+    // Password validation
+    if (!password.trim()) {
+      setPasswordError('Please fill in your password.');
+      return;
+    } else {
+      setPasswordError('');
+    }
+
+    signInWithEmailAndPassword(database, email, password)
+      .then(data => {
+        console.log(data, "authData");
+        navigate('/numberplate');
+      })
+      .catch(err => {
+        alert(err.code);
+        setLogin(true);
+      });
   };
 
   return (
@@ -22,19 +61,22 @@ const Login = () => {
           <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl">
             Login to your account
           </h1>
-          <form className="space-y-4 md:space-y-6" action="#">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-3" action="#">
             <div>
-              <label htmlFor="email" className="block mb-2 text-xl text-white font-bold">
-                Your email
+              <label className="block mb-2 text-xl text-white font-bold">
+                Your Email
               </label>
               <input
                 type="email"
                 name="email"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5 placeholder-black"
-                placeholder="name@company.com"
-                required
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
+                placeholder="Enter email"
+                required=""
               />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{emailError}</p>
+              )}
             </div>
             <div className="relative">
               <label htmlFor="password" className="block mb-2 text-xl text-white font-bold">
@@ -45,28 +87,37 @@ const Login = () => {
                 name="password"
                 id="password"
                 placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5 placeholder-black"
-                required
+                className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
+                required=""
               />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-2 font-bold">{passwordError}</p>
+              )}
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 top-1/2 transform -translate-y-1/2 "
                 onClick={togglePasswordVisibility}
+                aria-label="Toggle password visibility"
               >
-                {passwordShown ? <FaEyeSlash className='text-xl  mt-8' /> : <FaEye className='text-xl mt-8' />}
+                {passwordShown ? <FaEyeSlash className="text-xl mt-8" /> : <FaEye className="text-xl mt-8" />}
               </button>
             </div>
+            {login && ( // Conditionally render based on login state
+              <div className="text-red-500 text-md font-bold">
+                Invalid email or password. Please try again
+              </div>
+            )}
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="font-bold bg-teal-700 hover:bg-teal-600 focus:ring-4 focus:outline-none focus:ring-teal-300 w-60 py-4 px-4 mt-2 rounded-lg text-xl text-center text-white"
+                className="bg-teal-700 hover:bg-teal-600 focus:ring-4 focus:outline-none focus:ring-teal-300 w-60 py-4 px-4 mt-2 rounded-lg text-xl text-center text-white font-bold"
               >
-                Sign In
+                Login
               </button>
             </div>
             <div className="flex gap-3">
               <p className="text-xl text-white font-bold">
-                Don’t have an account yet?
+                Dont have an Account?
               </p>
               <Link to="/register">
                 <span className="font-bold hover:underline text-xl text-teal-700">
@@ -74,6 +125,7 @@ const Login = () => {
                 </span>
               </Link>
             </div>
+
           </form>
         </div>
       </section>
