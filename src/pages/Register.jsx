@@ -203,7 +203,7 @@ const Register = () => {
                 Registration failed. Please try again.
               </div>
             )}
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center">
               <p className="text-xl text-white font-bold">
                 Already have an Account?
               </p>

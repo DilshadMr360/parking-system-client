@@ -115,7 +115,7 @@ const Login = () => {
                 Login
               </button>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center ">
               <p className="text-xl text-white font-bold">
                 Dont have an Account?
               </p>
