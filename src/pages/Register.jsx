@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
 import { database } from '../pages/FirebaseConfig';
 
 const Register = () => {
@@ -70,15 +70,29 @@ const Register = () => {
     }
 
 
-    createUserWithEmailAndPassword(database, email, password).then(data => {
-      console.log(data, "authData")
-      navigate('/numberplate')
-    }).catch(err => {
-      alert(err.code)
-      setRegister(true)
+    createUserWithEmailAndPassword(database, email, password)
+    .then((userCredential) => {
+      // Send email verification
+      sendEmailVerification(userCredential.user)
+        .then(() => {
+          // Email verification sent
+          console.log("Email verification sent.");
+          // Navigate to the next page or show a success message
+          navigate('/numberplate');
+        })
+        .catch((error) => {
+          // Handle errors while sending verification email
+          console.error("Error sending email verification:", error);
+        });
     })
-  }
-
+    .catch((error) => {
+      // Handle registration errors
+      console.error("Error registering user:", error);
+      // Display error message to the user
+      alert(error.message);
+      setRegister(true);
+    });
+};
 
   return (
     <div className="relative h-screen">
