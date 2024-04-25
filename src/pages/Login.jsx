@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { database } from '../pages/FirebaseConfig';
+import { UserContext } from '../App';
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [login, setLogin] = useState(false);
-
+  const { setToken} = useContext(UserContext)
   const navigate = useNavigate();
+
 
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
@@ -39,8 +41,8 @@ const Login = () => {
 
     signInWithEmailAndPassword(database, email, password)
       .then(data => {
-        console.log(data, "authData");
-        navigate('/numberplate');
+        // console.log(data.user.accessToken);
+        setToken(data.user.accessToken);  // saving the token 
       })
       .catch(err => {
         alert(err.code);

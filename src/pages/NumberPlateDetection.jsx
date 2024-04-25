@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedVideo } from '@cloudinary/react';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { database } from './FirebaseConfig';
 import Swal from 'sweetalert2';
 import { FiUpload,FiPlay,FiLogOut  } from 'react-icons/fi';
+import { UserContext } from '../App';
 
 const cloudinary = new Cloudinary({
   cloud: {
@@ -24,6 +25,7 @@ function NumberPlateDetection() {
   const [processedVideoPublicId, setProcessedVideoPublicId] = useState('');
   const [videoLink, setVideoLink] = useState('');
 
+  const { setToken} = useContext(UserContext)
 
   const handleCameraDetection = async () => {
     try {
@@ -36,10 +38,10 @@ function NumberPlateDetection() {
     }
   };
   // const handleClick = () =>{
-  //   signOut(database).then(val=>{
-  //     console.log(val,"val")
-  //     navigate('/')
-  //   })
+    // signOut(database).then(val=>{
+    //   console.log(val,"val")
+    //   navigate('/')
+    // })
   // }
 
   const handleFileChange = (e) => {
@@ -134,8 +136,12 @@ function NumberPlateDetection() {
       if (result.isConfirmed) {
         signOut(database)
           .then(() => {
+            signOut(database).then(val=>{
+              console.log(val,"val")
+              setToken('')
+              navigate('/')
+            })
             console.log('User signed out successfully');
-            navigate('/');
           })
           .catch((error) => {
             console.error('Error signing out:', error);
