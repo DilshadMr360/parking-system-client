@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import { createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
 import { database } from '../pages/FirebaseConfig';
+import { UserContext } from '../App';
 
 const Register = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -10,6 +11,8 @@ const Register = () => {
   const [userError, setUserError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const { setToken} = useContext(UserContext)
+
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
   const navigate = useNavigate()
@@ -72,10 +75,13 @@ const Register = () => {
 
     createUserWithEmailAndPassword(database, email, password)
     .then((userCredential) => {
+      setToken(userCredential.user.accessToken);  // saving the token 
+   
       // Send email verification
       sendEmailVerification(userCredential.user)
         .then(() => {
           // Email verification sent
+          
           console.log("Email verification sent.");
           // Navigate to the next page or show a success message
           navigate('/numberplate');
