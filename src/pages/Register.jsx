@@ -110,8 +110,8 @@ const Register = () => {
         />
 
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8 md:w-4/12 bg-black bg-opacity-75 rounded-lg">
-          <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl">
-            Register your account
+          <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl flex justify-center">
+            Registration Form
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-3" action="#">
             <div>
@@ -139,7 +139,7 @@ const Register = () => {
                 name="email"
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-black font-bold sm:text-sm rounded-lg block w-full p-2.5  placeholder-gray-400"
-                placeholder="Enter email"
+                placeholder="Enter Email"
                 required=""
               />
               {emailError && (

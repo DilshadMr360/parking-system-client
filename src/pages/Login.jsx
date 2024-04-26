@@ -60,8 +60,8 @@ const Login = () => {
         />
 
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8 md:w-4/12 bg-black bg-opacity-75 rounded-lg">
-          <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl">
-            Login to your account
+          <h1 className="text-xl leading-tight tracking-tight text-white font-bold md:text-3xl  flex justify-center">
+            Login Form
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-3" action="#">
             <div>
