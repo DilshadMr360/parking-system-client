@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { database } from './FirebaseConfig';
 import Swal from 'sweetalert2';
-import { FiUpload,FiPlay,FiLogOut  } from 'react-icons/fi';
+import { FiUpload, FiPlay, FiLogOut } from 'react-icons/fi';
 import { UserContext } from '../App';
 
 const cloudinary = new Cloudinary({
@@ -23,26 +23,19 @@ function NumberPlateDetection() {
   const [file, setFile] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [processedVideoPublicId, setProcessedVideoPublicId] = useState('');
-  const [videoLink, setVideoLink] = useState('');
+  const { setToken } = useContext(UserContext)
 
-  const { setToken} = useContext(UserContext)
 
   const handleCameraDetection = async () => {
     try {
-      // Request webcam processing
       const response = await axios.post('http://localhost:5000/webcam');
-      // Set the processed video public ID received from the backend response
       setProcessedVideoPublicId(response.data.processed_video_url);
     } catch (error) {
       console.error('Error processing webcam:', error);
     }
   };
-  // const handleClick = () =>{
-    // signOut(database).then(val=>{
-    //   console.log(val,"val")
-    //   navigate('/')
-    // })
-  // }
+
+
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -66,16 +59,6 @@ function NumberPlateDetection() {
       setProcessing(false);
     }
   };
-
-  const handleChange = (e) => {
-    setVideoLink(e.target.value);
-  };
-
-  const handlePasteLink = () => {
-    setProcessedVideoPublicId(videoLink);
-  };
-
-
 
 
 
@@ -118,9 +101,6 @@ function NumberPlateDetection() {
     setProcessedVideoPublicId2(videoLink2);
   };
 
-
-
-
   //////////////////////////////
 
   const handleClick = () => {
@@ -136,8 +116,8 @@ function NumberPlateDetection() {
       if (result.isConfirmed) {
         signOut(database)
           .then(() => {
-            signOut(database).then(val=>{
-              console.log(val,"val")
+            signOut(database).then(val => {
+              console.log(val, "val")
               setToken('')
               navigate('/')
             })
@@ -151,34 +131,27 @@ function NumberPlateDetection() {
     });
   };
 
-
-
-
   return (
     <div className='bg-black bg-opacity-90 text-white min-h-screen'>
       <div className="flex justify-between items-center mx-9">
         <h1 className=' w-full md:w-11/12 text-md md:text-3xl font-bold mt-8 mb-6 text-center'>Intelligent Smart Parking Solution with Real-Time Number Plate Detection</h1>
         <button onClick={handleClick} className="bg-red-700 md:py-2 md: md:px-4 md:mt-2 md:w-24 w-24 -mt-2 py-3 text-white font-bold rounded ">
-        <FiLogOut className="h-6 w-6 mx-auto " /> 
+          <FiLogOut className="h-6 w-6 mx-auto " />
         </button>
       </div>
 
-
-
       <div className='flex flex-col md:flex-row w-full -mt-5 '>
-
 
         {/* Number Plate Full VIEW*/}
 
         <div className="container  px-4 sm:px-6  lg:px-8  w-full md:w-6/12 md:items-start">
           <h1 className="text-2xl font-bold mt-8 mb-6  text-center">Number Plate Detection </h1>
 
-
           <div className="flex flex-col space-y-4">
             {/* Upload Video Button */}
             <div className="flex flex-col space-y-2 text-center">
               <label htmlFor="upload" className="bg-slate-400  hover:bg-slate-600 text-white font-bold py-2 px-4 rounded cursor-pointer">
-              <FiUpload className="h-6 w-6 mx-auto" /> 
+                <FiUpload className="h-6 w-6 mx-auto" />
               </label>
               <input
                 type="file"
@@ -196,19 +169,11 @@ function NumberPlateDetection() {
                 {processing ? 'Processing...' : 'Upload Video'}
               </button>
             </div>
-                {/* Turn On Camera Button */}
-        <button onClick={handleCameraDetection} className="bg-gray-600 py-2 px-4 text-white font-bold rounded">
-          Turn On Camera
-        </button>
+            {/* Turn On Camera Button */}
+            <button onClick={handleCameraDetection} className="bg-gray-600 py-2 px-4 text-white font-bold rounded">
+              Turn On Camera
+            </button>
 
-            {/* Or Paste a Video Link */}
-            <div className="flex items-center space-x-2">
-              <label htmlFor="video-link" className="mr-2 ">Paste a video link:</label>
-              <input type="text" id="" value={videoLink} onChange={handleChange} placeholder="Paste Video Link" className="border border-gray-400 py-2 px-4 rounded w-[600px] text-black" />
-              <button onClick={handlePasteLink} className="bg-teal-700 hover:bg-teal-900 text-white font-bold py-2 px-4 rounded cursor-pointer">
-              <FiPlay className="h-6 w-6" /> 
-              </button>
-            </div>
 
 
           </div>
@@ -238,7 +203,7 @@ function NumberPlateDetection() {
             {/* Upload Video Button */}
             <div className="flex flex-col space-y-2 text-center">
               <label htmlFor="upload-parking" className="bg-slate-400  hover:bg-slate-600 text-white font-bold py-2 px-4 rounded cursor-pointer">
-              <FiUpload className="h-6 w-6 mx-auto" /> 
+                <FiUpload className="h-6 w-6 mx-auto" />
               </label>
               <input
                 type="file"
@@ -257,21 +222,14 @@ function NumberPlateDetection() {
               </button>
             </div>
 
-                {/* Turn On Camera Button */}
-        <button onClick={handleCameraDetection} className="bg-gray-600 py-2 px-4 text-white font-bold rounded">
-          Turn On Camera
-        </button>
-
             {/* Or Paste a Video Link */}
             <div className="flex items-center space-x-2">
               <label htmlFor="video-link" className="mr-2 ">Paste a video link:</label>
               <input type="text" id="" value={videoLink2} onChange={handleChange2} placeholder="Paste Video Link" className="border border-gray-400 py-2 px-4 rounded w-[600px] text-black" />
               <button onClick={handlePasteLink2} className="bg-teal-700 hover:bg-teal-900 text-white font-bold py-2 px-4 rounded cursor-pointer">
-              <FiPlay className="h-6 w-6" /> 
+                <FiPlay className="h-6 w-6" />
               </button>
             </div>
-
-
           </div>
 
           {processedVideoPublicId2 && (
@@ -287,18 +245,10 @@ function NumberPlateDetection() {
             </div>
           )}
         </div>
-
         {/* Parking SLot End VIEW*/}
-
         {/* END Number Plate Full VIEW*/}
-
-
-      </div>
-
     </div>
-
-
+    </div>
   );
 }
-
 export default NumberPlateDetection;
