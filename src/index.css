@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logout-popup {
+    box-shadow: none !important;
+  }
