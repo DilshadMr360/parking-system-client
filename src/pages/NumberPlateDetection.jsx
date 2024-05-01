@@ -19,23 +19,23 @@ function NumberPlateDetection() {
 
   const navigate = useNavigate()
 
-
   const [file, setFile] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [processedVideoPublicId, setProcessedVideoPublicId] = useState('');
   const { setToken } = useContext(UserContext)
 
-
   const handleCameraDetection = async () => {
+    setProcessing(true);
     try {
-      const response = await axios.post('http://localhost:5000/webcam');
-      setProcessedVideoPublicId(response.data.processed_video_url);
+      const response = await axios.post('http://localhost:5000/webcam')
+      // Set the processed video public ID received from the backend response
+      setProcessedVideoPublicId(response.data.processed_public_id);
     } catch (error) {
       console.error('Error processing webcam:', error);
+    } finally {
+      setProcessing(false);
     }
   };
-
-
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -111,7 +111,6 @@ function NumberPlateDetection() {
       confirmButtonText: 'Yes, logout',
       confirmButtonColor: '#DD6B55',
       cancelButtonText: 'No, cancel',
-
     }).then((result) => {
       if (result.isConfirmed) {
         signOut(database)
@@ -247,7 +246,7 @@ function NumberPlateDetection() {
         </div>
         {/* Parking SLot End VIEW*/}
         {/* END Number Plate Full VIEW*/}
-    </div>
+      </div>
     </div>
   );
 }
